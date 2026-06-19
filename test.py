@@ -16,6 +16,7 @@ player_pos = départ.copy()
 font = pygame.font.Font(None, 50)
 texte = font.render("Go touch your blue friend", True, (255, 255, 255))
 Morts=0
+green_circle=False
 def ajouter_mort():
     global Morts
     Morts += 1
@@ -33,6 +34,8 @@ while running:
     screen.blit(texte, (20, 20))
     pygame.draw.circle(screen, "red", player_pos, 20)
     blue_circle=pygame.draw.circle(screen, "blue", (x_cercle, y_cercle), rayon)
+    if green_circle:
+        pygame.draw.circle(screen, "green", (50, 50), rayon)
     keys = pygame.key.get_pressed()
     if keys[pygame.K_UP]:
         player_pos.y -= 250 * dt
@@ -51,5 +54,5 @@ while running:
         ajouter_mort()
     if abs((player_pos.x - x_cercle)**2 + (player_pos.y - y_cercle)**2  <= rayon**2):
         player_pos=départ
-        blue_circle = pygame.draw.circle(screen, "green", (50, 50), rayon)
+        green_circle=True
         
