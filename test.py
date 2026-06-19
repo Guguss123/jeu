@@ -9,8 +9,8 @@ clock = pygame.time.Clock()
 running = True
 dt = 0
 rayon = 20
-x_cercle = screen.get_width() - rayon - 10  
-y_cercle = screen.get_height() - rayon - 10
+x_cercle = screen.get_width() - rayon  -20
+y_cercle = screen.get_height() - rayon -20
 départ = pygame.Vector2(screen.get_width() / 16, screen.get_height() / 16)
 player_pos = départ.copy()
 font = pygame.font.Font(None, 50)
@@ -32,7 +32,7 @@ while running:
     screen.fill("purple")
     screen.blit(texte, (20, 20))
     pygame.draw.circle(screen, "red", player_pos, 20)
-    pygame.draw.circle(screen, "blue", (x_cercle, y_cercle), rayon)
+    blue_circle=pygame.draw.circle(screen, "blue", (x_cercle, y_cercle), rayon)
     keys = pygame.key.get_pressed()
     if keys[pygame.K_UP]:
         player_pos.y -= 250 * dt
@@ -50,4 +50,6 @@ while running:
         player_pos = départ.copy()
         ajouter_mort()
     if abs((player_pos.x - x_cercle)**2 + (player_pos.y - y_cercle)**2  <= rayon**2):
-        ajouter_mort()
+        player_pos=départ
+        blue_circle = pygame.draw.circle(screen, "green", (50, 50), rayon)
+        
