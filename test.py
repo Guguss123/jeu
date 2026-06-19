@@ -12,6 +12,8 @@ rayon = 20
 x_cercle = screen.get_width() - rayon - 10  
 y_cercle = screen.get_height() - rayon - 10
 player_pos = pygame.Vector2(screen.get_width() / 16, screen.get_height() / 16)
+font = pygame.font.Font(None, 50)
+texte = font.render("Go touch your blue friend", True, (255, 255, 255))
 while running:
     # poll for events
     # pygame.QUIT event means the user clicked X to close your window
@@ -21,7 +23,7 @@ while running:
 
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("purple")
-
+    screen.blit(texte, (20, 20))
     pygame.draw.circle(screen, "red", player_pos, 20)
     pygame.draw.circle(screen, "blue", (x_cercle, y_cercle), rayon)
     keys = pygame.key.get_pressed()
@@ -35,9 +37,7 @@ while running:
         player_pos.x += 250 * dt
     # flip() the display to put your work on screen
     pygame.display.flip()
-    image = pygame.image.load("level 1.jpg")
-    screen.blit(image , (100, 100))
     dt = clock.tick(60) / 1000
+    
     if abs((player_pos.x - x_cercle)**2 + (player_pos.y - y_cercle)**2  <= rayon**2):
-        pygame.quit
-
+        pygame.quit()
