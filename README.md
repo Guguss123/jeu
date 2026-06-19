@@ -1,2 +1,3 @@
 Un super jeu
-une deuxième ligne
+
+run `python3 test.py`
