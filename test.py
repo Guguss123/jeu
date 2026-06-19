@@ -11,7 +11,8 @@ dt = 0
 rayon = 20
 x_cercle = screen.get_width() - rayon - 10  
 y_cercle = screen.get_height() - rayon - 10
-player_pos = pygame.Vector2(screen.get_width() / 16, screen.get_height() / 16)
+départ = pygame.Vector2(screen.get_width() / 16, screen.get_height() / 16)
+player_pos = départ.copy()
 font = pygame.font.Font(None, 50)
 texte = font.render("Go touch your blue friend", True, (255, 255, 255))
 while running:
@@ -38,6 +39,8 @@ while running:
     # flip() the display to put your work on screen
     pygame.display.flip()
     dt = clock.tick(60) / 1000
+    if player_pos.x < 20 or player_pos.x > screen.get_width() - 20 or player_pos.y < 20 or player_pos.y > screen.get_height() - 20 :
+        player_pos = départ.copy()
     
     if abs((player_pos.x - x_cercle)**2 + (player_pos.y - y_cercle)**2  <= rayon**2):
         pygame.quit()
