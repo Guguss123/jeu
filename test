@@ -1,0 +1,4 @@
+import pygame
+import random
+screen = pygame.display.set_mode((1280, 720))
+pygame.draw.rect(screen, (0, 0, 0), (random, random, 100, 100))

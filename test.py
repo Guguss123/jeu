@@ -16,7 +16,7 @@ player_pos = départ.copy()
 font = pygame.font.Font(None, 50)
 texte = font.render("Go touch your blue friend", True, (255, 255, 255))
 Morts=0
-blue_circle=False
+blue_circle=True
 green_circle=False
 def ajouter_mort():
     global Morts
@@ -47,7 +47,6 @@ while running:
         player_pos.x -= 250 * dt
     if keys[pygame.K_RIGHT]:
         player_pos.x += 250 * dt
-    blue_circle=True
     afficher_score()
     # flip() the display to put your work on screen
     pygame.display.flip()
@@ -56,7 +55,7 @@ while running:
         player_pos = départ.copy()
         ajouter_mort()
     if abs((player_pos.x - x_cercle)**2 + (player_pos.y - y_cercle)**2  <= rayon**2):
-        player_pos=départ
         green_circle=True
         blue_circle=False
         texte = font.render("Go touch your green friend", True, (255, 255, 255))
+        pygame.draw.rect(screen, black.border_color, rect, border_px)
