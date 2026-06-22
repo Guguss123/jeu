@@ -26,13 +26,21 @@ is_green_circle = False
 ligne_visible = False
 is_meteorit = False
 meteorit_color = "white"
-def ajouter_mort():
-    global Morts
+def gerer_mort():
+    global Morts, player_pos
     Morts += 1
+    player_pos = depart.copy() 
 def afficher_score():
     texte = font.render(f"Morts : {Morts}", True, (255, 255, 255))
     screen.blit(texte, (500, 20))
-
+def fin_level_1():
+    global is_green_circle, is_blue_circle, ligne_visible, texte, is_meteorit, depart
+    is_green_circle=True
+    is_blue_circle=False
+    ligne_visible=True
+    texte = font.render("Go touch your green friend", True, (255, 255, 255))
+    is_meteorit=True
+    depart = player_pos.copy()
 while running:
     # pygame.QUIT event means the user clicked X to close your window
     for event in pygame.event.get():
@@ -65,7 +73,6 @@ while running:
     if keys[pygame.K_RIGHT]:
         player_pos.x += 250 * dt
     afficher_score()
-    print(pygame.time.get_ticks())
     if is_meteorit :
         if math.floor(pygame.time.get_ticks()/2000) % 2:
             meteorit = pygame.draw.rect(screen, "black" , (x, y, rect_largeur, rect_hauteur))
@@ -78,15 +85,11 @@ while running:
     # flip() the display to put your work on screen
     pygame.display.flip()
     dt = clock.tick(60) / 1000
+    #print(depart)
     if personnage_principal.left < 0 or personnage_principal.right >= screen.get_width() or personnage_principal.top < 0  or personnage_principal.bottom > screen.get_height() :
-        player_pos = depart.copy()
-        ajouter_mort()
+        gerer_mort()
     if pygame.Rect.colliderect(personnage_principal, blue_circle):
-        is_green_circle=True
-        is_blue_circle=False
-        ligne_visible=True
-        texte = font.render("Go touch your green friend", True, (255, 255, 255))
-        is_meteorit=True
+        fin_level_1()
     if 'ligne' in locals():
         if pygame.Rect.colliderect(personnage_principal, ligne):
-            ajouter_mort()
+            gerer_mort()
