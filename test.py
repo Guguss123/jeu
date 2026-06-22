@@ -44,7 +44,7 @@ while running:
     screen.blit(texte, (20, 20))
     PP=pygame.draw.circle(screen, "red", player_pos, 20)
     if ligne_visible:
-       pygame.draw.line(
+       ligne = pygame.draw.line(
         screen,
         (0, 0, 0),
         (screen.get_width() // 2, screen.get_height() // 8),
@@ -81,5 +81,6 @@ while running:
         ligne_visible=True
         texte = font.render("Go touch your green friend", True, (255, 255, 255))
         meteorit=True
-        if pygame.rect.colliderect(PP.rect,ligne_visible.rect):
+    if 'ligne' in locals():
+        if pygame.Rect.colliderect(PP,ligne):
             ajouter_mort
