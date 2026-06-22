@@ -32,6 +32,7 @@ def ajouter_mort():
 def afficher_score():
     texte = font.render(f"Morts : {Morts}", True, (255, 255, 255))
     screen.blit(texte, (500, 20))
+
 while running:
     # pygame.QUIT event means the user clicked X to close your window
     for event in pygame.event.get():
@@ -64,8 +65,12 @@ while running:
     if keys[pygame.K_RIGHT]:
         player_pos.x += 250 * dt
     afficher_score()
+    print(pygame.time.get_ticks())
     if is_meteorit :
-        meteorit = pygame.draw.rect(screen, meteorit_color , (x, y, rect_largeur, rect_hauteur))
+        if math.floor(pygame.time.get_ticks()/2000) % 2:
+            meteorit = pygame.draw.rect(screen, "black" , (x, y, rect_largeur, rect_hauteur))
+        else:
+            meteorit = pygame.draw.rect(screen, "white" , (x, y, rect_largeur, rect_hauteur))
       #  if (dt / 1000) % 2 == 0:
       #      meteorit.color = "black"
       #  else:
