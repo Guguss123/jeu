@@ -41,7 +41,7 @@ def fin_level_1():
     ligne_visible=True
     texte = font.render("Go touch your green friend", True, (255, 255, 255))
     is_meteorit=True
-    depart = player_pos.copy()
+    depart = pygame.Vector2(x_cercle, y_cercle)
 while running:
     # pygame.QUIT event means the user clicked X to close your window
     for event in pygame.event.get():
@@ -88,8 +88,8 @@ while running:
     # flip() the display to put your work on screen
     pygame.display.flip()
     dt = clock.tick(60) / 1000
-    #print(depart)
-    if personnage_principal.left < 0 or personnage_principal.right >= screen.get_width() or personnage_principal.top < 0  or personnage_principal.bottom > screen.get_height() :
+    print(personnage_principal.left)
+    if personnage_principal.left <= 0 or personnage_principal.right >= screen.get_width() or personnage_principal.top <= 0  or personnage_principal.bottom >= screen.get_height() :
         gerer_mort()
     if pygame.Rect.colliderect(personnage_principal, blue_circle):
         fin_level_1()
