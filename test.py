@@ -25,7 +25,8 @@ is_blue_circle = True
 is_green_circle = False
 ligne_visible = False
 is_meteorit = False
-meteorit_color = "white"
+def new_meteorit():
+    meteorit = pygame.draw.rect(screen, "white" , (x  , y , rect_largeur, rect_hauteur))
 def gerer_mort():
     global Morts, player_pos
     Morts += 1
@@ -78,6 +79,8 @@ while running:
             meteorit = pygame.draw.rect(screen, "black" , (x, y, rect_largeur, rect_hauteur))
         else:
             meteorit = pygame.draw.rect(screen, "white" , (x, y, rect_largeur, rect_hauteur))
+            new_meteorit()
+
       #  if (dt / 1000) % 2 == 0:
       #      meteorit.color = "black"
       #  else:
@@ -93,3 +96,7 @@ while running:
     if 'ligne' in locals():
         if pygame.Rect.colliderect(personnage_principal, ligne):
             gerer_mort()
+    if 'meteorit' in locals():
+        if pygame.Rect.colliderect(personnage_principal,meteorit):
+            if math.floor(pygame.time.get_ticks()/2000) % 2:
+                gerer_mort()
