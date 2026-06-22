@@ -2,6 +2,7 @@
 import pygame
 import math
 import random
+import time
 # pygame setup
 pygame.init()
 screen = pygame.display.set_mode((1280, 720))
@@ -11,6 +12,10 @@ dt = 0
 rayon = 20
 x_cercle = screen.get_width() - rayon  -20
 y_cercle = screen.get_height() - rayon -20
+rect_largeur = 100
+rect_hauteur = 50
+x = random.randint(0, screen.get_width() - rect_largeur)
+y = random.randint(0, screen.get_height() - rect_hauteur)
 départ = pygame.Vector2(screen.get_width() / 16, screen.get_height() / 16)
 player_pos = départ.copy()
 font = pygame.font.Font(None, 50)
@@ -18,6 +23,10 @@ texte = font.render("Go touch your blue friend", True, (255, 255, 255))
 Morts=0
 blue_circle=True
 green_circle=False
+ligne_visible=False
+meteorit =False
+white = (255,255,255)
+black = (0,0,0)
 def ajouter_mort():
     global Morts
     Morts += 1
@@ -33,7 +42,15 @@ while running:
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("purple")
     screen.blit(texte, (20, 20))
-    pygame.draw.circle(screen, "red", player_pos, 20)
+    PP=pygame.draw.circle(screen, "red", player_pos, 20)
+    if ligne_visible:
+       pygame.draw.line(
+        screen,
+        (0, 0, 0),
+        (screen.get_width() // 2, screen.get_height() // 8),
+        (screen.get_width() // 2, screen.get_height()),
+        2
+    )
     if blue_circle:
         pygame.draw.circle(screen, "blue", (x_cercle, y_cercle), rayon)
     if green_circle:
@@ -48,6 +65,10 @@ while running:
     if keys[pygame.K_RIGHT]:
         player_pos.x += 250 * dt
     afficher_score()
+    if meteorit :
+        pygame.draw.rect(screen,white , (x, y, rect_largeur, rect_hauteur))
+        time.sleep(1)
+        meteorit = black
     # flip() the display to put your work on screen
     pygame.display.flip()
     dt = clock.tick(60) / 1000
@@ -57,5 +78,8 @@ while running:
     if abs((player_pos.x - x_cercle)**2 + (player_pos.y - y_cercle)**2  <= rayon**2):
         green_circle=True
         blue_circle=False
+        ligne_visible=True
         texte = font.render("Go touch your green friend", True, (255, 255, 255))
-        pygame.draw.rect(screen, black.border_color, rect, border_px)
+        meteorit=True
+        if pygame.rect.colliderect(PP.rect,ligne_visible.rect):
+            ajouter_mort
