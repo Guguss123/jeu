@@ -88,7 +88,6 @@ while running:
     # flip() the display to put your work on screen
     pygame.display.flip()
     dt = clock.tick(60) / 1000
-    print(personnage_principal.left)
     if personnage_principal.left <= 0 or personnage_principal.right >= screen.get_width() or personnage_principal.top <= 0  or personnage_principal.bottom >= screen.get_height() :
         gerer_mort()
     if pygame.Rect.colliderect(personnage_principal, blue_circle):
@@ -100,3 +99,10 @@ while running:
         if pygame.Rect.colliderect(personnage_principal,meteorit):
             if math.floor(pygame.time.get_ticks()/2000) % 2:
                 gerer_mort()
+    if 'green_circle' in locals():
+        if pygame.Rect.colliderect(personnage_principal, green_circle):
+            ligne_visible=False
+            texte = font.render("Go touch your brown friend", True, (255, 255, 255))
+            is_meteorit=False
+            depart = pygame.Vector2(50, 680)
+            is_green_circle = False
