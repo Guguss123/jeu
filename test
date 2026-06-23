@@ -1,4 +1,34 @@
 import pygame
+import math
 import random
+import time
+# pygame setup
+pygame.init()
 screen = pygame.display.set_mode((1280, 720))
-pygame.draw.rect(screen, (0, 0, 0), (random, random, 100, 100))
+clock = pygame.time.Clock()
+dt=0
+running = True
+rect_largeur = 100
+rect_hauteur = 50
+x = random.randint(0, screen.get_width() - rect_largeur)
+y = random.randint(0, screen.get_height() - rect_hauteur)
+is_meteorit=False
+screen.fill("purple")
+while running:
+    # pygame.QUIT event means the user clicked X to close your window
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+    dt = clock.tick(60) / 1000  
+    def new_meteorit():
+          meteorit =pygame.draw.rect(screen, "white" , (random.randint(0, screen.get_width() - rect_largeur), random.randint(0, screen.get_height() - rect_hauteur), rect_largeur, rect_hauteur))
+    is_meteorit=True    
+    if is_meteorit :
+        if math.floor(pygame.time.get_ticks()/2000) % 2:
+            meteorit = pygame.draw.rect(screen, "black" , (x, y, rect_largeur, rect_hauteur))
+            new_meteorit()
+        else:
+            meteorit = pygame.draw.rect(screen, "white" , (x, y, rect_largeur, rect_hauteur))
+            
+    pygame.display.flip()
+         
