@@ -46,12 +46,7 @@ def cree_liste_ennemi(level):
     if level == 1:
         return []
     if level == 2:
-        ligne = pygame.draw.line(
-        screen,
-        "black",
-        (screen.get_width() // 2, screen.get_height() // 8),
-        (screen.get_width() // 2, screen.get_height()),
-        2)
+        ligne = pygame.draw.line(screen,"black",(screen.get_width() // 2, screen.get_height() // 8),(screen.get_width() // 2, screen.get_height()),2)
         return [ligne]
 while running:
     # pygame.QUIT event means the user clicked X to close your window
