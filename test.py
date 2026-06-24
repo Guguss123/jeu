@@ -34,18 +34,19 @@ def afficher_score():
     texte = font.render(f"Morts : {Morts}", True, (255, 255, 255))
     screen.blit(texte, (500, 20))
 def fin_level():
-    global is_green_circle, is_blue_circle, ligne_visible, texte, is_meteorit, depart, level
+    global is_green_circle, is_blue_circle, ligne_visible, texte, is_meteorit, depart, level, temps
     is_green_circle=True
     is_blue_circle=False
     ligne_visible=True
     texte = font.render("Go touch your green friend", True, (255, 255, 255))
     is_meteorit=True
     depart = pygame.Vector2(x_cercle, y_cercle)
-    level =+ 1
+    level = level + 1
+    temps = pygame.time.get_ticks()
 def cree_liste_ennemi(level):
     if level == 1:
         return []
-    if level == 2:
+    if level >= 2:
         ligne = pygame.draw.line(
         screen,
         "black",
@@ -53,6 +54,13 @@ def cree_liste_ennemi(level):
         (screen.get_width() // 2, screen.get_height()),
         2)
         return [ligne]
+def cree_arrivee(level):
+    if level == 1:
+        blue_circle = pygame.draw.circle(screen, "blue", (x_cercle, y_cercle), rayon)
+        return blue_circle
+    if level >= 2:
+        green_circle = pygame.draw.circle(screen, "green", (50, 680), rayon)
+        return green_circle
 while running:
     # pygame.QUIT event means the user clicked X to close your window
     for event in pygame.event.get():
@@ -62,6 +70,7 @@ while running:
     screen.fill("purple")
     screen.blit(texte, (20, 20))
     personnage_principal = pygame.draw.circle(screen, "red", player_pos, 20)
+    print(level)
     if ligne_visible:
        ligne = pygame.draw.line(
         screen,
@@ -70,11 +79,20 @@ while running:
         (screen.get_width() // 2, screen.get_height()),
         2
     )
-    liste_ennemis = cree_liste_ennemi(level)   
-    if is_blue_circle:
-        blue_circle = pygame.draw.circle(screen, "blue", (x_cercle, y_cercle), rayon)
-    if is_green_circle:
-        green_circle = pygame.draw.circle(screen, "green", (50, 680), rayon)
+    liste_ennemis = cree_liste_ennemi(level)  
+    if 'temps' in locals():
+        print(pygame.time.get_ticks() - temps)
+        if math.floor((pygame.time.get_ticks() - temps)/2000) == (pygame.time.get_ticks() - temps)/2000 and level == 2:
+            liste_ennemis.append(
+                pygame.draw.rect(
+                    screen, "black" ,
+                        (random.randint(0, screen.get_width() - rect_largeur),
+                        random.randint(0, screen.get_height() - rect_hauteur),
+                        rect_largeur,
+                        rect_hauteur)))
+    arrivee = cree_arrivee(level)   
+
+    
     keys = pygame.key.get_pressed()
     if keys[pygame.K_UP]:
         player_pos.y -= 250 * dt
@@ -85,13 +103,13 @@ while running:
     if keys[pygame.K_RIGHT]:
         player_pos.x += 250 * dt
     afficher_score()
-    if is_meteorit :
-        if math.floor(pygame.time.get_ticks()/2000) % 2:
-            meteorit = pygame.draw.rect(screen, "black" , (x, y, rect_largeur, rect_hauteur))
-        else:
-            meteorit = pygame.draw.rect(screen, "white" , (x, y, rect_largeur, rect_hauteur))
-            meteorit2=meteorit.copy()
-            meteorit2.move(10,20)
+    #if is_meteorit :
+     #   if math.floor(pygame.time.get_ticks()/2000) % 2:
+      #      meteorit = pygame.draw.rect(screen, "black" , (x, y, rect_largeur, rect_hauteur))
+       # else:
+        #    meteorit = pygame.draw.rect(screen, "white" , (x, y, rect_largeur, rect_hauteur))
+         #   meteorit2=meteorit.copy()
+          #  meteorit2.move(10,20)
             #meteorit2.move(random.randint(0, screen.get_width() - rect_largeur),random.randint(0, screen.get_height() - rect_hauteur))
 
       #  if (dt / 1000) % 2 == 0:
@@ -105,11 +123,11 @@ while running:
         gerer_mort()
     if personnage_principal.collidelist(liste_ennemis) != -1:
         gerer_mort()
-    if personnage_principal.colliderect(blue_circle):
+    if personnage_principal.colliderect(arrivee):
         fin_level()
-    if 'ligne' in locals():
-        if pygame.Rect.colliderect(personnage_principal, ligne):
-            gerer_mort()
+    #if 'ligne' in locals():
+    #    if pygame.Rect.colliderect(personnage_principal, ligne):
+    #        gerer_mort()
     if 'meteorit' in locals():
         if pygame.Rect.colliderect(personnage_principal,meteorit):
             if math.floor(pygame.time.get_ticks()/2000) % 2:
