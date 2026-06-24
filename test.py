@@ -21,6 +21,7 @@ player_pos = depart.copy()
 font = pygame.font.Font(None, 50)
 texte = font.render("Go touch your blue friend", True, (255, 255, 255))
 Morts=0
+level = 1
 is_blue_circle = True
 is_green_circle = False
 ligne_visible = False
@@ -32,20 +33,31 @@ def gerer_mort():
 def afficher_score():
     texte = font.render(f"Morts : {Morts}", True, (255, 255, 255))
     screen.blit(texte, (500, 20))
-def fin_level_1():
-    global is_green_circle, is_blue_circle, ligne_visible, texte, is_meteorit, depart
+def fin_level():
+    global is_green_circle, is_blue_circle, ligne_visible, texte, is_meteorit, depart, level
     is_green_circle=True
     is_blue_circle=False
     ligne_visible=True
     texte = font.render("Go touch your green friend", True, (255, 255, 255))
     is_meteorit=True
     depart = pygame.Vector2(x_cercle, y_cercle)
+    level =+ 1
+def cree_liste_ennemi(level):
+    if level == 1:
+        return []
+    if level == 2:
+        ligne = pygame.draw.line(
+        screen,
+        "black",
+        (screen.get_width() // 2, screen.get_height() // 8),
+        (screen.get_width() // 2, screen.get_height()),
+        2)
+        return [ligne]
 while running:
     # pygame.QUIT event means the user clicked X to close your window
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("purple")
     screen.blit(texte, (20, 20))
@@ -58,6 +70,7 @@ while running:
         (screen.get_width() // 2, screen.get_height()),
         2
     )
+    liste_ennemis = cree_liste_ennemi(level)   
     if is_blue_circle:
         blue_circle = pygame.draw.circle(screen, "blue", (x_cercle, y_cercle), rayon)
     if is_green_circle:
@@ -77,8 +90,9 @@ while running:
             meteorit = pygame.draw.rect(screen, "black" , (x, y, rect_largeur, rect_hauteur))
         else:
             meteorit = pygame.draw.rect(screen, "white" , (x, y, rect_largeur, rect_hauteur))
-            meteorit2=meteorit.copy ()
-            pygame.Rect.move,meteorit2(random.randint(0, screen.get_width() - rect_largeur),random.randint(0, screen.get_height() - rect_hauteur))
+            meteorit2=meteorit.copy()
+            meteorit2.move(10,20)
+            #meteorit2.move(random.randint(0, screen.get_width() - rect_largeur),random.randint(0, screen.get_height() - rect_hauteur))
 
       #  if (dt / 1000) % 2 == 0:
       #      meteorit.color = "black"
@@ -89,8 +103,10 @@ while running:
     dt = clock.tick(60) / 1000
     if personnage_principal.left <= 0 or personnage_principal.right >= screen.get_width() or personnage_principal.top <= 0  or personnage_principal.bottom >= screen.get_height() :
         gerer_mort()
-    if pygame.Rect.colliderect(personnage_principal, blue_circle):
-        fin_level_1()
+    if personnage_principal.collidelist(liste_ennemis) != -1:
+        gerer_mort()
+    if personnage_principal.colliderect(blue_circle):
+        fin_level()
     if 'ligne' in locals():
         if pygame.Rect.colliderect(personnage_principal, ligne):
             gerer_mort()
@@ -99,7 +115,7 @@ while running:
             if math.floor(pygame.time.get_ticks()/2000) % 2:
                 gerer_mort()
     if 'green_circle' in locals():
-        if pygame.Rect.colliderect(personnage_principal, green_circle):
+        if personnage_principal.colliderect(green_circle):
             ligne_visible=False
             texte = font.render("Go touch your brown friend", True, (255, 255, 255))
             is_meteorit=False
