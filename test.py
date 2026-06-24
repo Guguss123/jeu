@@ -25,8 +25,6 @@ is_blue_circle = True
 is_green_circle = False
 ligne_visible = False
 is_meteorit = False
-def new_meteorit():
-    meteorit = pygame.draw.rect(screen, "white" , (x  , y , rect_largeur, rect_hauteur))
 def gerer_mort():
     global Morts, player_pos
     Morts += 1
@@ -79,7 +77,8 @@ while running:
             meteorit = pygame.draw.rect(screen, "black" , (x, y, rect_largeur, rect_hauteur))
         else:
             meteorit = pygame.draw.rect(screen, "white" , (x, y, rect_largeur, rect_hauteur))
-            new_meteorit()
+            meteorit2=meteorit.copy ()
+            pygame.Rect.move,meteorit2(random.randint(0, screen.get_width() - rect_largeur),random.randint(0, screen.get_height() - rect_hauteur))
 
       #  if (dt / 1000) % 2 == 0:
       #      meteorit.color = "black"
