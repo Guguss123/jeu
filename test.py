@@ -22,17 +22,20 @@ font = pygame.font.Font(None, 50)
 texte = font.render("Go touch your blue friend", True, (255, 255, 255))
 Morts=0
 level = 1
+is_brown_circle = False
 is_blue_circle = True
 is_green_circle = False
 ligne_visible = False
 is_meteorit = False
 def fin_level2() :
-    global ligne_visible,texte,is_meteorit,depart,is_green_circle
+    global ligne_visible,texte,is_meteorit,depart,is_green_circle,is_brown_circle
     ligne_visible=False
     texte = font.render("Go touch your brown friend", True, (255, 255, 255))
     is_meteorit=False
     depart = pygame.Vector2(50, 680)
     is_green_circle = False
+    is_brown_circle=True
+    level ==  3
 def gerer_mort():
     global Morts, player_pos
     Morts += 1
@@ -41,22 +44,44 @@ def afficher_score():
     texte = font.render(f"Morts : {Morts}", True, (255, 255, 255))
     screen.blit(texte, (500, 20))
 def fin_level():
-    global is_green_circle, is_blue_circle, ligne_visible, texte, is_meteorit, depart, level
+    global is_green_circle, is_blue_circle, ligne_visible, texte, is_meteorit, depart, level, temps
     is_green_circle=True
     is_blue_circle=False
     ligne_visible=True
     texte = font.render("Go touch your green friend", True, (255, 255, 255))
     is_meteorit=True
     depart = pygame.Vector2(x_cercle, y_cercle)
-    level == 2
+    level = 2
+    temps = pygame.time.get_ticks()
 def cree_liste_ennemi(level):
     if level == 1:
         return []
-    if level == 2:
-        ligne = pygame.draw.line(screen,"black",(screen.get_width() // 2, screen.get_height() // 8),(screen.get_width() // 2, screen.get_height()),2)
-        meteorit = pygame.draw.rect(screen, "black" , (x, y, rect_largeur, rect_hauteur))
-
-        return [ligne,meteorit]
+    if level >= 2:
+        ligne = pygame.draw.line(
+        screen,
+        "black",
+        (screen.get_width() // 2, screen.get_height() // 8),
+        (screen.get_width() // 2, screen.get_height()),
+        2)
+        return [ligne]
+def cree_arrivee(level):
+    if level == 1:
+        blue_circle = pygame.draw.circle(screen, "blue", (x_cercle, y_cercle), rayon)
+        return blue_circle
+    if is_green_circle or level==2:
+        green_circle = pygame.draw.circle(screen, "green", (50, 680), rayon)
+        return green_circle
+    if level==3:
+        brown_circle = pygame.draw.circle(screen, "brown",(1222.75,45),rayon)
+        return brown_circle
+    if is_blue_circle:
+            fin_level()
+    elif is_green_circle:
+            fin_level2()
+    elif is_brown_circle:
+            is_brown_circle = True
+    
+    
 while running:
     # pygame.QUIT event means the user clicked X to close your window
     for event in pygame.event.get():
@@ -66,13 +91,29 @@ while running:
     screen.fill("purple")
     screen.blit(texte, (20, 20))
     personnage_principal = pygame.draw.circle(screen, "red", player_pos, 20)
+    print(level)
     if ligne_visible:
-       ligne = pygame.draw.line(screen,"black",(screen.get_width() // 2, screen.get_height() // 8),(screen.get_width() // 2, screen.get_height()),2)
-    liste_ennemis = cree_liste_ennemi(level)   
-    if is_blue_circle:
-        blue_circle = pygame.draw.circle(screen, "blue", (x_cercle, y_cercle), rayon)
-    if is_green_circle:
-        green_circle = pygame.draw.circle(screen, "green", (50, 680), rayon)
+       ligne = pygame.draw.line(
+        screen,
+        "black",
+        (screen.get_width() // 2, screen.get_height() // 8),
+        (screen.get_width() // 2, screen.get_height()),
+        2
+    )
+    liste_ennemis = cree_liste_ennemi(level)  
+    if 'temps' in locals():
+        print(pygame.time.get_ticks() - temps)
+        if math.floor((pygame.time.get_ticks() - temps)/2000) == (pygame.time.get_ticks() - temps)/2000 and level == 2:
+            liste_ennemis.append(
+                pygame.draw.rect(
+                    screen, "black" ,
+                        (random.randint(0, screen.get_width() - rect_largeur),
+                        random.randint(0, screen.get_height() - rect_hauteur),
+                        rect_largeur,
+                        rect_hauteur)))
+    arrivee = cree_arrivee(level)   
+
+    
     keys = pygame.key.get_pressed()
     if keys[pygame.K_UP]:
         player_pos.y -= 250 * dt
@@ -88,8 +129,9 @@ while running:
             meteorit = pygame.draw.rect(screen, "black" , (x, y, rect_largeur, rect_hauteur))
         else:
             meteorit = pygame.draw.rect(screen, "white" , (x, y, rect_largeur, rect_hauteur))
+         #   meteorit2=meteorit.copy()
+          #  meteorit2.move(10,20)
             #meteorit2.move(random.randint(0, screen.get_width() - rect_largeur),random.randint(0, screen.get_height() - rect_hauteur))
-
       #  if (dt / 1000) % 2 == 0:
       #      meteorit.color = "black"
       #  else:
@@ -101,15 +143,18 @@ while running:
         gerer_mort()
     if personnage_principal.collidelist(liste_ennemis) != -1:
         gerer_mort()
-    if personnage_principal.colliderect(blue_circle):
-        fin_level()
-    if 'ligne' in locals():
-        if pygame.Rect.colliderect(personnage_principal, ligne):
-            gerer_mort()
+    if personnage_principal.colliderect(arrivee):
+        if is_blue_circle:
+            fin_level()
+        elif is_green_circle:
+            fin_level2()
+        elif is_brown_circle:
+            is_brown_circle=True
+            
+    #if 'ligne' in locals():
+    #    if pygame.Rect.colliderect(personnage_principal, ligne):
+    #        gerer_mort()
     if 'meteorit' in locals():
         if pygame.Rect.colliderect(personnage_principal,meteorit):
             if math.floor(pygame.time.get_ticks()/2000) % 2:
                 gerer_mort()
-    if 'green_circle' in locals():
-        if personnage_principal.colliderect(green_circle):
-            fin_level2
