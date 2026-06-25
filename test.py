@@ -22,19 +22,12 @@ font = pygame.font.Font(None, 50)
 texte = font.render("Go touch your blue friend", True, (255, 255, 255))
 Morts=0
 level = 1
-is_brown_circle = False
-is_blue_circle = True
-is_green_circle = False
-ligne_visible = False
 is_meteorit = False
 def fin_level2() :
-    global ligne_visible,texte,is_meteorit,depart,is_green_circle,is_brown_circle
-    ligne_visible=False
+    global texte,is_meteorit,depart
     texte = font.render("Go touch your brown friend", True, (255, 255, 255))
     is_meteorit=False
     depart = pygame.Vector2(50, 680)
-    is_green_circle = False
-    is_brown_circle=True
     level ==  3
 def gerer_mort():
     global Morts, player_pos
@@ -44,10 +37,7 @@ def afficher_score():
     texte = font.render(f"Morts : {Morts}", True, (255, 255, 255))
     screen.blit(texte, (500, 20))
 def fin_level():
-    global is_green_circle, is_blue_circle, ligne_visible, texte, is_meteorit, depart, level, temps
-    is_green_circle=True
-    is_blue_circle=False
-    ligne_visible=True
+    global texte, is_meteorit, depart, level, temps
     texte = font.render("Go touch your green friend", True, (255, 255, 255))
     is_meteorit=True
     depart = pygame.Vector2(x_cercle, y_cercle)
@@ -84,16 +74,7 @@ while running:
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("purple")
     screen.blit(texte, (20, 20))
-    personnage_principal = pygame.draw.circle(screen, "red", player_pos, 20)
-    print(level)
-    if ligne_visible:
-       ligne = pygame.draw.line(
-        screen,
-        "black",
-        (screen.get_width() // 2, screen.get_height() // 8),
-        (screen.get_width() // 2, screen.get_height()),
-        2
-    )
+    personnage_principal = pygame.draw.circle(screen, "red", player_pos, 20)   
     liste_ennemis = cree_liste_ennemi(level)  
     if 'temps' in locals():
         print(pygame.time.get_ticks() - temps)
