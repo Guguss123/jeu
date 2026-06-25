@@ -51,7 +51,7 @@ def fin_level():
     texte = font.render("Go touch your green friend", True, (255, 255, 255))
     is_meteorit=True
     depart = pygame.Vector2(x_cercle, y_cercle)
-    level = 2
+    level = level + 1
     temps = pygame.time.get_ticks()
 def cree_liste_ennemi(level):
     if level == 1:
@@ -68,18 +68,12 @@ def cree_arrivee(level):
     if level == 1:
         blue_circle = pygame.draw.circle(screen, "blue", (x_cercle, y_cercle), rayon)
         return blue_circle
-    if is_green_circle or level==2:
+    if level==2:
         green_circle = pygame.draw.circle(screen, "green", (50, 680), rayon)
         return green_circle
     if level==3:
         brown_circle = pygame.draw.circle(screen, "brown",(1222.75,45),rayon)
         return brown_circle
-    if is_blue_circle:
-            fin_level()
-    elif is_green_circle:
-            fin_level2()
-    elif is_brown_circle:
-            is_brown_circle = True
     
     
 while running:
@@ -144,12 +138,7 @@ while running:
     if personnage_principal.collidelist(liste_ennemis) != -1:
         gerer_mort()
     if personnage_principal.colliderect(arrivee):
-        if is_blue_circle:
-            fin_level()
-        elif is_green_circle:
-            fin_level2()
-        elif is_brown_circle:
-            is_brown_circle=True
+        fin_level()
             
     #if 'ligne' in locals():
     #    if pygame.Rect.colliderect(personnage_principal, ligne):
